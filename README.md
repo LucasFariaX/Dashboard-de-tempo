@@ -90,14 +90,6 @@ python app.py
 http://127.0.0.1:5000/
 ```
 
- Como Contribuir
-1. Faça um fork do projeto.
-2. Crie uma branch (`git checkout -b minha-feature`).
-3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`).
-4. Envie um push para a branch (`git push origin minha-feature`).
-5. Abra um Pull Request.
-
----
 
 Feito por:  Lucas Faria [(https://github.com/seu-usuario)](https://github.com/LucasFariaX)
 
