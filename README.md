@@ -99,5 +99,5 @@ http://127.0.0.1:5000/
 
 ---
 
-Criado por Lucas Faria [(https://github.com/seu-usuario)](https://github.com/LucasFariaX)
+Feito por:  Lucas Faria [(https://github.com/seu-usuario)](https://github.com/LucasFariaX)
 
