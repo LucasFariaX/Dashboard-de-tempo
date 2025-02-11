@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros de Pontos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Registros de Pontos</h1>
+        <a href="{{ url_for('index') }}" class="btn-voltar">Voltar</a>
+
+        <table class="tabela-registros-pontos">
+            <thead>
+                <tr>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Tempo Gasto (horas)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ponto in pontos %}
+                <tr>
+                    <td>{{ ponto['entrada'] }}</td>
+                    <td>{{ ponto['saida'] or 'Aberto' }}</td>
+                    <td>
+                        {% if ponto['saida'] %}
+                            {{ ((datetime.strptime(ponto['saida'], '%Y-%m-%d %H:%M:%S') - datetime.strptime(ponto['entrada'], '%Y-%m-%d %H:%M:%S')).total_seconds() / 3600)|round(2) }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    
+</body>
+</html>
