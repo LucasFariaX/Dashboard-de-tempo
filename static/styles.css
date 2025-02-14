@@ -188,8 +188,8 @@ a:hover {
 footer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-end;
     height: 30vh;
     width: 100vw; /* Faz o footer ocupar 100% da largura da tela */
     background-color: #f8f9fa;
@@ -205,16 +205,21 @@ footer {
 
 /* Estiliza os títulos dentro do footer */
 footer h1 {
-    font-size: 1.8rem; /* Tamanho maior para destaque */
+    font-size: 0.8rem; /* Tamanho maior para destaque */
     font-weight: bold; /* Deixa em negrito */
     margin-bottom: 10px; /* Espaçamento entre os títulos */
 }
 
 footer h3 {
-    font-size: 1.2rem; /* Tamanho médio */
+    font-size: 0.7rem; /* Tamanho médio */
     font-style: italic; /* Deixa o texto mais suave */
     margin-bottom: 5px; /* Adiciona um pequeno espaçamento */
     color: #555; /* Cor mais suave */
+}
+
+footer h4 {
+    font-size: 0.7rem;
+    font-weight: bold;
 }
 
 /* Responsividade: ajusta o footer em telas menores */
@@ -225,11 +230,11 @@ footer h3 {
     }
     
     footer h1 {
-        font-size: 1.5rem;
+        font-size: 0.8rem;
     }
 
     footer h3 {
-        font-size: 1rem;
+        font-size: 0.7rem;
     }
 }
 
@@ -271,7 +276,7 @@ footer h3 {
 /* Ajustando os gráficos */
 canvas {
     width: 100% !important;
-    height: 350px !important; /* Aumentando a altura dos gráficos */
+    height: 500px !important; /* Aumentando a altura dos gráficos */
     background-color: #1a1a1a;
     border-radius: 5px;
     padding: 10px;
