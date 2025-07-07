@@ -1,95 +1,95 @@
-Rastreador de Objetivos
+🧠 Planner A1
 
-Este projeto é um rastreador de objetivos que permite registrar e acompanhar o progresso de metas pessoais, registrando tempo investido e tarefas concluídas. Ele utiliza Flask para o backend e SQLite para armazenamento de dados.
 
-Funcionalidades
-- Criar, editar e excluir objetivos.
-- Registrar entradas e saídas para acompanhar o tempo investido.
-- Adicionar, concluir e excluir tarefas relacionadas a um objetivo.
-- Exibir o progresso em gráficos dinâmicos.
+🔎 Visão Geral
 
-Tecnologias Utilizadas
-- Backend: Python (Flask)
-- Banco de Dados: SQLite
-- Frontend: HTML, CSS
-- Bibliotecas:
-  - Flask
-  - Chart.js (para gráficos)
+O *Planner A1* é um sistema pessoal de planejamento, desenvolvido com *Flask + SQLite + IndexedDB*, que simula um painel estilo Google Agenda + Notion para gerenciar:
+
+* Hábitos com metas e rastreamento
+* Compromissos com calendário interativo
+* Objetivos com tarefas e consistência
+* Anotações rápidas com suporte offline
+* Dashboard com gráficos e heatmap
+* Modo Foco com Pomodoro e progresso visual
+
+
+
+🧰 Tecnologias Utilizadas
+
+- Backend: Flask, SQLite3, Blueprints, Werkzeug.
+- Frontend: HTML5, CSS3, JavaScript (Vanilla).
+- Gráficos & Calendário: Chart.js, FullCalendar.
+- Persistência Offline: IndexedDB (via JS).
+- Visual responsivo: layout adaptado para mobile.
+
 
 📂 Estrutura do Projeto
-```
-📁 projeto
-│-- 📄 app.py              # Backend Flask
-│-- 📄 database.db         # Banco de dados SQLite
-│-- 📄 index.html          # Página principal
-│-- 📄 editar_objetivo.html # Página para editar objetivos
-│-- 📄 registros.html      # Página de registros de tempo
-│-- 📁 static
-│   ├── 📄 styles.css      # Estilos da aplicação
-│-- 📁 templates
-│   ├── 📄 index.html      # Interface principal
-│   ├── 📄 editar_objetivo.html # Edição de objetivos
-│   ├── 📄 registros.html  # Histórico de registros
-```
 
-Como Executar
-1. Clone o repositório
-```bash
-git clone https://github.com/seu-usuario/projeto-rastreador.git
-cd projeto-rastreador
-```
-
-2. Crie e ative um ambiente virtual
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate  # Windows
-```
-
-3. Instale as dependências
-```bash
-pip install flask
-```
-
-4. Crie o banco de dados
-```bash
-python
->>> import sqlite3
->>> conn = sqlite3.connect('database.db')
->>> conn.execute('''CREATE TABLE IF NOT EXISTS objetivos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT NOT NULL,
-        meta INTEGER NOT NULL,
-        progresso INTEGER DEFAULT 0
-    );''')
->>> conn.execute('''CREATE TABLE IF NOT EXISTS pontos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        objetivo_id INTEGER,
-        entrada TEXT,
-        saida TEXT,
-        FOREIGN KEY (objetivo_id) REFERENCES objetivos(id)
-    );''')
->>> conn.execute('''CREATE TABLE IF NOT EXISTS tarefas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        objetivo_id INTEGER,
-        descricao TEXT,
-        concluida INTEGER DEFAULT 0,
-        FOREIGN KEY (objetivo_id) REFERENCES objetivos(id)
-    );''')
->>> conn.commit()
->>> conn.close()
-```
-
-5. Inicie o servidor Flask
-```bash
-python app.py
-```
-
-6. Acesse a aplicação no navegador
-```
-http://127.0.0.1:5000/
-```
+planner-a1/
+├── app.py                  # Arquivo principal Flask
+├── database.py             # Conexão com SQLite
+├── routes/                 # Blueprints (agenda, habitos, dashboard, etc)
+├── static/
+│   ├── css/                # Estilos por página
+│   └── js/                 # IndexedDB, Pomodoro
+├── templates/              # HTMLs (Jinja2)
+├── rotina.db               # Banco de dados SQLite
 
 
-Feito por:  Lucas Faria [(https://github.com/seu-usuario)](https://github.com/LucasFariaX)
+Funcionalidades
 
+✅ Hábitos Inteligentes
+
+* Criação de hábitos com datas de início/fim
+* Definição de dias recorrentes (ex: Seg, Qua, Sex)
+* Controle de checkboxes por dia da semana
+* Cálculo de porcentagem de conclusão com meta definida
+* Interface responsiva com botão colapsável para editar recorrência
+
+🗓️ Agenda com Integração
+
+* Calendário FullCalendar responsivo
+* Eventos manuais e automáticos (baseados em hábitos recorrentes)
+* Adição, edição e remoção de eventos
+* Compromissos do dia atual e do dia seguinte em destaque
+
+🎯 Objetivos com Tarefas
+
+* Criação de objetivos com data final
+* Registro de progresso diário (com consistência nos últimos 30 dias)
+* Tarefas vinculadas a cada objetivo (com check)
+* Conclusão de objetivo com data marcada
+* Gráfico de consistência do objetivo (Chart.js)
+
+📋 Anotações (Offline/Online)
+
+* Anotações com textarea editável e salva automática
+* Suporte a funcionamento **offline via IndexedDB**
+* Sincroniza com backend ao reconectar
+
+### 📊 Dashboard Visual
+
+* Cards informativos (pendências, próximo evento, última nota)
+* Gráfico de progresso semanal (Chart.js)
+* Heatmap de hábitos (180 dias)
+* Mini calendário de eventos
+* Central analítica com percentual de cada módulo
+
+🐺 Modo Foco ("Modo Caverna")
+
+* Temporizador Pomodoro ajustável
+* Exibição apenas do essencial: tarefas do dia, compromissos e progresso
+* Suporte a anotações locais (via localStorage)
+
+🔐 Sistema de Usuários
+
+* Registro e login com senha criptografada (hash)
+* Perfil com alteração de senha
+
+
+📌 Status
+
+> Projeto *100% funcional e pronto para uso local ou hospedagem em servidor Flask/Python.**
+
+
+Criado por Lucas Faria
