@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda - Calendário</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/agenda.css">
+  <style>
+    #calendar {
+      width: 100%;
+      background-color: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .fc-toolbar-title {
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container column-layout">
+    <header class="topbar">
+      <h2>Agenda</h2>
+      <nav>
+        <ul>
+          <li><a href="/">📊 Dashboard</a></li>
+          <li><a href="/agenda" class="active">📅 Agenda</a></li>
+          <li><a href="/anotacoes">📜 Anotações</a></li>
+          <li><a href="/habitos">✅ Hábitos</a></li>
+          <li><a href="/objetivos">🎯 Objetivos</a></li>
+          <li><a href="/modo_foco">🐺 Modo Caverna</a></li>
+          <li><a href="/perfil">👤 Perfil</a></li>
+        </ul>
+      </nav>
+    </header>
+
+
+    <main class="main-content">
+      <section class="agenda">
+        <h1>Calendário de Compromissos</h1>
+        <div id="calendar"></div>
+
+        <div class="agenda-resumo">
+          <h2>Compromissos de Hoje</h2>
+          <ul class="eventos-dia">
+            {% for evento in eventos_hoje %}
+            <li><strong>{{ evento.hora }}</strong> - {{ evento.titulo }}</li>
+            {% else %}
+            <li>Sem compromissos hoje.</li>
+            {% endfor %}
+          </ul>
+
+          <h2>Compromissos de Amanhã</h2>
+          <ul class="eventos-dia">
+            {% for evento in eventos_amanha %}
+            <li><strong>{{ evento.hora }}</strong> - {{ evento.titulo }}</li>
+            {% else %}
+            <li>Sem compromissos amanhã.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        selectable: true,
+        events: '/eventos',
+        displayEventTime: true,
+        eventDisplay: 'block',
+        eventTimeFormat: {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        },
+        dateClick: function (info) {
+          const titulo = prompt("Título do evento:");
+          if (!titulo) return;
+
+          const hora = prompt("Hora do evento (formato HH:MM):", "08:00");
+          const horaValida = /^[0-2][0-9]:[0-5][0-9]$/.test(hora);
+          if (!hora || !horaValida) {
+            alert("⛔ Hora inválida. Use o formato HH:MM.");
+            return;
+          }
+
+          fetch('/eventos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: info.dateStr, hora: hora, titulo: titulo })
+          }).then(() => calendar.refetchEvents());
+        },
+        eventClick: function (info) {
+          if (!info.event.id.startsWith("habito") && confirm("Deseja remover este evento?")) {
+            fetch('/eventos/delete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: info.event.id })
+            }).then(() => calendar.refetchEvents());
+          }
+        }
+      });
+
+      calendar.render();
+    });
+  </script>
+
+
+
+</body>
+
+</html>

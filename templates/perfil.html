@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil do Usuário</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --primary-light: #34495e;
+      --secondary: #2980b9;
+      --accent: #27ae60;
+      --background: #ecf0f1;
+      --surface: #ffffff;
+      --text: #333;
+      --text-light: #777;
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --radius: 8px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+    }
+
+    .container.column-layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--primary);
+      color: white;
+      padding: var(--spacing-sm) var(--spacing-md);
+      flex-wrap: wrap;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .topbar nav ul {
+      list-style: none;
+      display: flex;
+      gap: var(--spacing-sm);
+      margin: 0;
+      padding: 0;
+    }
+
+    .topbar nav ul li {
+      display: flex;
+      align-items: center;
+    }
+
+    .topbar nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.3s;
+    }
+
+    .topbar nav ul li a:hover,
+    .topbar nav ul li a.active {
+      background-color: var(--primary-light);
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: var(--spacing-xl);
+      background-color: var(--background);
+      overflow-y: auto;
+    }
+
+    .perfil-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .perfil-container h1 {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .perfil-info {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-section {
+      margin-top: var(--spacing-lg);
+    }
+
+    .form-section h3 {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .form-section form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="password"], select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .btn {
+      align-self: flex-start;
+      background-color: var(--accent);
+      color: var(--surface);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #1e8449;
+    }
+
+    @media (max-width: 768px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+      }
+
+      .topbar nav ul {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: var(--spacing-sm);
+        padding-left: 0;
+      }
+
+      .topbar nav ul li {
+        display: flex;
+        align-items: center;
+      }
+
+      .topbar nav ul li a {
+        gap: 6px;
+      }
+
+      .main-content {
+        padding: var(--spacing-lg);
+      }
+
+      .perfil-container {
+        margin: var(--spacing-lg) auto;
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container column-layout">
+    <header class="topbar">
+      <h2>Perfil</h2>
+      <nav>
+        <ul>
+          <li><a href="/">📊 Dashboard</a></li>
+          <li><a href="/agenda">📅 Agenda</a></li>
+          <li><a href="/anotacoes">📜 Anotações</a></li>
+          <li><a href="/habitos">✅ Hábitos</a></li>
+          <li><a href="/objetivos">🎯 Objetivos</a></li>
+          <li><a href="/modo_foco">🐺 Modo Caverna</a></li>
+          <li><a href="/perfil" class="active">👤 Perfil</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <div class="perfil-container">
+        <h1>👤 Meu Perfil</h1>
+
+        <div class="perfil-info">
+          <p><strong>ID do Usuário:</strong> {{ usuario['id'] }}</p>
+          <p><strong>Nome de Usuário:</strong> {{ usuario['usuario'] }}</p>
+        </div>
+
+        <div class="form-section">
+          <h3>✏️ Alterar Senha</h3>
+          <form method="POST" action="/alterar_senha">
+            <label for="senha_atual">Senha atual</label>
+            <input type="password" name="senha_atual" required>
+
+            <label for="nova_senha">Nova senha</label>
+            <input type="password" name="nova_senha" required>
+
+            <button type="submit" class="btn">Salvar Nova Senha</button>
+          </form>
+        </div>
+
+        <div class="form-section">
+          <h3>🌙 Preferência de Tema</h3>
+          <form method="POST" action="/tema">
+            <label for="tema">Escolha o tema</label>
+            <select name="tema">
+              <option value="claro" {% if tema == 'claro' %}selected{% endif %}>Claro</option>
+              <option value="escuro" {% if tema == 'escuro' %}selected{% endif %}>Escuro</option>
+            </select>
+            <button type="submit" class="btn">Aplicar Tema</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

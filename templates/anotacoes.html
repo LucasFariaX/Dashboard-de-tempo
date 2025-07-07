@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anotações - Minha Rotina</title>
+  <link rel="stylesheet" href="/static/css/anotacoes.css" />
+</head>
+<body>
+  <div class="container column-layout">
+    <header class="topbar">
+      <h2>Anotações</h2>
+      <nav>
+        <ul>
+          <li><a href="/">📊 Dashboard</a></li>
+          <li><a href="/agenda">📅 Agenda</a></li>
+          <li><a href="/anotacoes" class="active">📜 Anotações</a></li>
+          <li><a href="/habitos">✅ Hábitos</a></li>
+          <li><a href="/objetivos">🎯 Objetivos</a></li>
+          <li><a href="/modo_foco">🐺 Modo Caverna</a></li>
+          <li><a href="/perfil">👤 Perfil</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <section class="anotacoes">
+        <h1>📋 Nova Anotação</h1>
+
+        <form class="nota-form" id="anotacaoForm">
+          <textarea name="conteudo" id="conteudoAnotacao" placeholder="Escreva sua anotação..." required></textarea>
+          <button type="submit">Salvar</button>
+        </form>
+
+        <h1 style="margin-top: 32px;">🗂 Minhas Notas</h1>
+        <ul class="nota-lista" id="notaLista">
+          {% for nota in notas %}
+          <li class="card">
+            <form action="/anotacoes/editar/{{ nota.id }}" method="POST" class="edit-form">
+              <textarea name="conteudo" required>{{ nota['conteudo'] }}</textarea>
+              <small>{{ nota['data'] }}</small><br>
+              <button type="submit">💾 Salvar</button>
+            </form>
+
+            <form action="/anotacoes/excluir/{{ nota.id }}" method="POST" onsubmit="return confirm('Deseja excluir esta anotação?');">
+              <button type="submit" class="delete-button">🗑 Excluir</button>
+            </form>
+          </li>
+          {% else %}
+          <li class="card">📭 Nenhuma anotação encontrada.</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/offline-db.js"></script>
+  <script>
+    document.getElementById("anotacaoForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const conteudo = document.getElementById("conteudoAnotacao").value;
+      const data = new Date().toISOString().split('T')[0];
+
+      if (navigator.onLine) {
+        fetch('/anotacoes', {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ conteudo })
+        }).then(() => window.location.reload());
+      } else {
+        saveOffline("anotacoes", { conteudo, data });
+        alert("📝 Anotação salva offline! Será sincronizada ao reconectar.");
+        document.getElementById("anotacaoForm").reset();
+      }
+    });
+
+    if (!navigator.onLine) {
+      const lista = document.getElementById("notaLista");
+      lista.innerHTML = "<li class='card'>🔄 Carregando anotações offline...</li>";
+
+      const tx = db.transaction("anotacoes", "readonly");
+      const store = tx.objectStore("anotacoes");
+      const request = store.getAll();
+
+      request.onsuccess = () => {
+        const resultados = request.result;
+        if (resultados.length === 0) {
+          lista.innerHTML = "<li class='card'>📭 Nenhuma anotação offline.</li>";
+        } else {
+          lista.innerHTML = "";
+          resultados.forEach(nota => {
+            const li = document.createElement("li");
+            li.className = "card";
+            li.innerHTML = `<p>${nota.conteudo}</p><small>${nota.data}</small>`;
+            lista.appendChild(li);
+          });
+        }
+      };
+    }
+  </script>
+</body>
+</html>

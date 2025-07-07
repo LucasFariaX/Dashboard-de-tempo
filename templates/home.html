@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Minha Rotina</title>
+  <link rel="stylesheet" href="/static/css/home.css">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="container column-layout">
+    <header class="topbar">
+      <h2>Dashboard</h2>
+      <nav>
+        <ul>
+          <li><a href="/" class="active">📊 Dashboard</a></li>
+          <li><a href="/agenda">📅 Agenda</a></li>
+          <li><a href="/anotacoes">📜 Anotações</a></li>
+          <li><a href="/habitos">✅ Hábitos</a></li>
+          <li><a href="/objetivos">🎯 Objetivos</a></li>
+          <li><a href="/modo_foco">🐺 Modo Caverna</a></li>
+          <li><a href="/perfil">👤 Perfil</a></li>
+        </ul>
+      </nav>
+    </header>
+
+
+    <main class="main-content">
+      <section class="dashboard">
+        <h1>Olá Novamente</h1> 
+
+
+        <div class="cards">
+          <div class="card highlight-card">
+            <h3>✅ Pendentes Hoje</h3>
+            <p><strong style="font-size: 22px;">{{ pendentes }}</strong> hábitos ainda não concluídos.</p>
+          </div>
+          <div class="card highlight-card">
+            <h3>📅 Próximo Evento</h3>
+            <p><strong>{{ compromisso }}</strong></p>
+          </div>
+          <div class="card highlight-card">
+            <h3>📝 Última Anotação</h3>
+            <p style="font-style: italic;">“{{ nota }}”</p>
+          </div>
+          <div class="card highlight-card">
+            <h3>🎯 Metas</h3>
+            <p>Acompanhe o progresso e registre tarefas.</p>
+            <a href="/objetivos" class="btn" style="margin-top: 8px;">➡ Acessar</a>
+          </div>
+        </div>
+
+        <div class="graficos-duplos">
+          <div class="grafico-box">
+            <h3>📈 Visão de Progresso</h3>
+            <canvas id="graficoProgresso"></canvas>
+          </div>
+          <div class="grafico-box">
+            <h3>📊 Gráfico Semanal de Hábitos</h3>
+            <canvas id="graficoHabitosSemana"></canvas>
+          </div>
+        </div>
+
+        <div class="analitico-duplo">
+          <div class="cards" style="flex: 1; min-width: 300px;">
+            <div class="card analytic-card">
+              <h3>🎯 Progresso</h3>
+              {% for obj in objetivos %}
+              <div style="margin-bottom: 8px;">
+                <strong>{{ obj.nome }}</strong>
+                <div class="progresso-barra">
+                  <div style="width: {{ obj.porcentagem }}%;" class="progresso-preenchido"></div>
+                </div>
+                {% if obj.data_conclusao %}
+                <small>✅ Concluído em {{ obj.data_conclusao }}</small>
+                {% else %}
+                <small>{{ obj.dias_restantes }} dias restantes</small>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="card analytic-card">
+              <h3>✅ Hábitos Atuais</h3>
+              {% for habito in habitos_ativos %}
+              <div style="margin-bottom: 8px;">
+                <strong>{{ habito.nome }}</strong>
+                <div class="progresso-barra">
+                  <div class="progresso-preenchido" style="width: {{ habito.porcentagem }}%;"></div>
+                </div>
+                <small>{{ habito.porcentagem }}%</small>
+              </div>
+              {% else %}
+              <p>Nenhum hábito cadastrado.</p>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 24px;">
+            <div class="card heatmap-box">
+              <h3>🔥 Heatmap 6 Meses</h3>
+              <div class="heatmap-grid">
+                {% for dia in habitos_heatmap %}
+                <div class="dia nivel-{{ dia.nivel }}" title="{{ dia.data }}"></div>
+                {% endfor %}
+              </div>
+              <p class="heatmap-legenda">
+                <span class="nivel-0"></span> Nenhum
+                <span class="nivel-1"></span> Pouco
+                <span class="nivel-2"></span> Médio
+                <span class="nivel-3"></span> Muito
+                <span class="nivel-4"></span> Intenso
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>📅 Calendário de Eventos</h3>
+              <div id="mini-calendar"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Chart.js scripts -->
+  <script>
+    const dados = {{ grafico_data | tojson }};
+    const ctx = document.getElementById('graficoProgresso').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Hábitos', 'Agenda', 'Anotações', 'Objetivos'],
+        datasets: [{
+          label: 'Itens concluídos na semana',
+          data: [dados.habitos, dados.agenda, dados.anotacoes, dados.objetivos],
+          backgroundColor: ['#27ae60', '#2980b9', '#8e44ad', '#f39c12'],
+          borderRadius: 6,
+          barThickness: 40
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        }
+      }
+    });
+
+    const habitosSemana = {{ habitos_7dias | tojson }};
+    const ctxHabitos = document.getElementById('graficoHabitosSemana').getContext('2d');
+    new Chart(ctxHabitos, {
+      type: 'line',
+      data: {
+        labels: habitosSemana.map(d => d.dia),
+        datasets: [{
+          label: 'Hábitos concluídos',
+          data: habitosSemana.map(d => d.quantidade),
+          fill: true,
+          backgroundColor: 'rgba(39, 174, 96, 0.1)',
+          borderColor: '#27ae60',
+          pointBackgroundColor: '#27ae60',
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        }
+      }
+    });
+  </script>
+
+  <!-- FullCalendar Script -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('mini-calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 300,
+        locale: 'pt-br',
+        headerToolbar: {
+          left: 'title',
+          center: '',
+          right: 'prev,next'
+        },
+        events: '/eventos'
+      });
+      calendar.render();
+    });
+  </script>
+</body>
+
+</html>

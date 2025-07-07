@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Objetivos - Planner A1</title>
+  <link rel="stylesheet" href="/static/css/objetivos.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    canvas[id^="chart"] {
+      max-width: 80px;
+      max-height: 80px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container column-layout">
+    <header class="topbar">
+      <h2>Objetivos</h2>
+      <nav>
+        <ul>
+          <li><a href="/">📊 Dashboard</a></li>
+          <li><a href="/agenda">📅 Agenda</a></li>
+          <li><a href="/anotacoes">📜 Anotações</a></li>
+          <li><a href="/habitos">✅ Hábitos</a></li>
+          <li><a href="/objetivos" class="active">🎯 Objetivos</a></li>
+          <li><a href="/modo_foco">🐺 Modo Caverna</a></li>
+          <li><a href="/perfil">👤 Perfil</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <section class="objetivos">
+        <h1>Meus Objetivos</h1>
+
+        <form method="POST" action="/objetivos/criar" class="form-objetivo">
+          <input type="text" name="nome" placeholder="Nome do objetivo" required>
+          <input type="date" name="data_final" required>
+          <button type="submit" class="btn-add">Adicionar objetivo</button>
+        </form>
+
+        <div class="cards">
+          {% for objetivo in objetivos %}
+          <div class="card">
+            <div class="card-header">
+              <h3>{{ objetivo.nome }}</h3>
+              <div class="card-menu">
+                <button>⋮</button>
+                <div class="menu-dropdown">
+                  <a href="/registros/{{ objetivo.id }}">Ver registros</a>
+                  <a href="/editar_objetivo/{{ objetivo.id }}">Editar</a>
+                  <a href="/excluir_objetivo/{{ objetivo.id }}">Excluir</a>
+                </div>
+              </div>
+              <div class="card-subinfo">
+                <div class="meta-info">
+                  <p><strong>Prazo:</strong> {{ objetivo.data_final }}</p>
+                  {% if objetivo.data_conclusao %}
+                  <p><strong>Status:</strong> ✅ Concluído</p>
+                  {% else %}
+                  <p><strong>Restam:</strong> {{ objetivo.dias_restantes }} dias</p>
+                  {% endif %}
+                </div>
+                <canvas id="chart{{ loop.index }}" width="80" height="80"></canvas>
+              </div>
+            </div>
+
+            {% if not objetivo.data_conclusao %}
+            <form method="POST" action="/objetivos/concluir/{{ objetivo.id }}">
+              <button type="submit" class="btn-finalizar">Marcar como concluído</button>
+            </form>
+            {% else %}
+            <p class="finalizado">Concluído em: {{ objetivo.data_conclusao }}</p>
+            {% endif %}
+
+            <div class="secao">
+              <h4>Progresso Diário</h4>
+              <form method="POST" action="/objetivos/marcar/{{ objetivo.id }}">
+                <input type="text" name="observacao" placeholder="Observação opcional">
+                <button type="submit">Marcar Hoje</button>
+              </form>
+              <ul>
+                {% for marcacao in objetivo.marcacoes %}
+                <li>{{ marcacao.data }} - <em>{{ marcacao.observacao or 'Sem observação' }}</em></li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="secao">
+              <h4>Tarefas</h4>
+              <form action="/adicionar_tarefa/{{ objetivo.id }}" method="POST">
+                <input type="text" name="descricao" placeholder="Nova tarefa" required>
+                <button type="submit">Adicionar</button>
+              </form>
+              <ul>
+                {% for tarefa in objetivo.tarefas %}
+                <li>
+                  <form action="/marcar_concluida/{{ tarefa.id }}" method="POST">
+                    <input type="checkbox" name="concluida" onchange="this.form.submit()" {% if tarefa.concluida %}checked{% endif %}>
+                  </form>
+                  <span class="{% if tarefa.concluida %}tarefa-concluida{% endif %}">{{ tarefa.descricao }}</span>
+                  <form action="/excluir_tarefa/{{ tarefa.id }}" method="POST">
+                    <button class="btn-excluir">Excluir</button>
+                  </form>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      {% for objetivo in objetivos %}
+      const canvasEl{{ loop.index }} = document.getElementById('chart{{ loop.index }}');
+      if (canvasEl{{ loop.index }}) {
+        const ctx{{ loop.index }} = canvasEl{{ loop.index }}.getContext('2d');
+        new Chart(ctx{{ loop.index }}, {
+          type: 'doughnut',
+          data: {
+            labels: ['Consistência', 'Restante'],
+            datasets: [{
+              data: [
+                {% if objetivo.data_conclusao %}100{% else %}{{ objetivo.consistencia|float }}{% endif %}, 
+                {% if objetivo.data_conclusao %}0{% else %}{{ (100 - objetivo.consistencia)|float }}{% endif %}
+              ],
+              backgroundColor: ['#27ae60', '#dcdcdc']
+            }]
+          },
+          options: {
+            cutout: '70%',
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+      {% endfor %}
+    });
+  </script>
+</body>
+
+</html>

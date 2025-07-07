@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hábitos - Minha Rotina</title>
+  <link rel="stylesheet" href="/static/css/habitos.css">
+  <style>
+    .recorrencia-bloco {
+      display: none;
+      padding: 10px;
+      background: #1e1e1e;
+      border: 1px solid #444;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .recorrencia-bloco.active {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .recorrencia-bloco form {
+      display: inline-block;
+    }
+
+    .recorrencia-bloco button {
+      padding: 6px 10px;
+      background-color: #2a2a2a;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .recorrencia-bloco button:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container column-layout">
+    <header class="topbar">
+      <h2>Habitos</h2>
+      <nav>
+        <ul>
+          <li><a href="/">📊 Dashboard</a></li>
+          <li><a href="/agenda">📅 Agenda</a></li>
+          <li><a href="/anotacoes">📜 Anotações</a></li>
+          <li><a href="/habitos" class="active">✅ Hábitos</a></li>
+          <li><a href="/objetivos">🎯 Objetivos</a></li>
+          <li><a href="/modo_foco">🐺 Modo Caverna</a></li>
+          <li><a href="/perfil">👤 Perfil</a></li>
+        </ul>
+      </nav>
+    </header>
+
+
+    <main class="main-content">
+      <section class="habitos">
+        <h1>Rastreamento de Hábitos</h1>
+
+        <form method="GET" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <label for="filtro" style="font-size: 14px; color: #bbb;">Filtrar por:</label>
+          <select name="filtro" id="filtro" onchange="this.form.submit()"
+            style="padding: 6px 10px; border-radius: 5px; background-color: #2a2a2a; color: #f5f5f5; border: 1px solid #444;">
+            <option value="semana" {% if filtro=='semana' %}selected{% endif %}>Semana atual</option>
+            <option value="mes" {% if filtro=='mes' %}selected{% endif %}>Mês atual</option>
+            <option value="todos" {% if filtro=='todos' %}selected{% endif %}>Todos</option>
+          </select>
+        </form>
+
+        <form class="habit-form" method="POST" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+          <input type="text" name="nome" placeholder="Novo hábito..." required>
+          <input type="number" name="meta" placeholder="Meta (dias)" min="1" style="max-width: 100px;">
+          <label for="data_inicio" style="font-size: 14px; color: #bbb;">Início:</label>
+          <input type="date" name="data_inicio" required>
+          <label for="data_fim" style="font-size: 14px; color: #bbb;">Fim:</label>
+          <input type="date" name="data_fim" required>
+          <button type="submit">Adicionar</button>
+        </form>
+
+        <div class="tabela-habitos">
+          <table>
+            <thead>
+              <tr>
+                <th rowspan="2">Hábito</th>
+                <th colspan="7">Feito</th>
+                <th rowspan="2">%</th>
+                <th rowspan="2">Meta</th>
+                <th rowspan="2">Ações</th>
+              </tr>
+              <tr>
+                {% for dia in ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] %}
+                <th>{{ dia }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for habito in habitos %}
+              <tr>
+                <td>{{ habito.nome }}</td>
+
+                {% for dia in ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] %}
+                <td>
+                  <form method="POST" action="/habitos/update">
+                    <input type="hidden" name="habito_id" value="{{ habito.id }}">
+                    <input type="hidden" name="dia" value="{{ dia }}">
+                    <input type="checkbox" name="feito" onchange="this.form.submit()" {% if habito.dias[dia] %}checked{%
+                      endif %}>
+                  </form>
+                </td>
+                {% endfor %}
+
+                <td>{{ habito.porcentagem }}%</td>
+                <td>{{ habito.total_feitos }}/{{ habito.meta }}</td>
+                <td>
+                  <button onclick="toggleRecorrencia({{ habito.id }})">🛠️ Recorrência</button>
+                  <form method="POST" action="/habitos/delete/{{ habito.id }}"
+                    onsubmit="return confirm('Tem certeza que deseja excluir este hábito?');">
+                    <button type="submit" title="Excluir hábito">🗑️</button>
+                  </form>
+                </td>
+              </tr>
+
+              <tr id="recorrencia-{{ habito.id }}" class="recorrencia-bloco">
+                <td colspan="11">
+                  {% for dia in ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] %}
+                  <form method="POST" action="/habitos/recorrencia" style="display: inline;">
+                    <input type="hidden" name="habito_id" value="{{ habito.id }}">
+                    <input type="hidden" name="dia" value="{{ dia }}">
+                    <button type="submit" {% if habito.recorrente[dia] %}style="background-color: #27ae60;" {% endif %}>
+                      {{ dia }}
+                    </button>
+                  </form>
+                  {% endfor %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function toggleRecorrencia(habitoId) {
+      const bloco = document.getElementById(`recorrencia-${habitoId}`);
+      bloco.classList.toggle('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+          const form = checkbox.closest('form');
+          if (form) {
+            form.submit();
+          }
+        });
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>

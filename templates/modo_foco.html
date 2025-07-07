@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modo Foco - Planner A1</title>
+    <link rel="stylesheet" href="/static/css/modo_foco.css">
+</head>
+
+<body>
+    <div class="modo-foco-container">
+        <header class="modo-foco-topbar">
+            <h2>🎯 Modo Foco</h2>
+            <a href="/" class="btn-sair">Sair do Modo Foco</a>
+        </header>
+
+        <main class="modo-foco-main">
+            <!-- Temporizador Pomodoro -->
+            <section class="pomodoro-box">
+                <h3>⏱ Temporizador</h3>
+                <div id="timer-display">25:00</div>
+                <div class="timer-controles">
+                    <input type="number" id="tempoMinutos" placeholder="Minutos" min="1" max="120">
+                    <button onclick="startTimer()">Iniciar</button>
+                    <button onclick="pauseTimer()">Pausar</button>
+                    <button onclick="resetTimer()">Resetar</button>
+                </div>
+            </section>
+
+            <!-- Tarefas do dia -->
+            <section class="tarefas-box">
+                <h3>📋 Tarefas de Hoje</h3>
+                <ul>
+                    {% for tarefa in tarefas_dia %}
+                    <li>
+                        <form method="POST" action="/modo_foco/tarefa/concluir/{{ tarefa.id }}">
+                            <input type="checkbox" name="concluida" onchange="this.form.submit()" {% if tarefa.concluida
+                                %}checked disabled{% endif %}>
+                            <span class="{% if tarefa.concluida %}concluida{% endif %}">{{ tarefa.descricao }}</span>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li>Nenhuma tarefa para hoje.</li>
+                    {% endfor %}
+                </ul>
+
+            </section>
+
+            <!-- Compromissos de hoje -->
+            <section class="compromisso-box">
+                <h3>🗓️ Compromissos de Hoje</h3>
+                <ul>
+                    {% for evento in eventos_hoje %}
+                    <li><strong>{{ evento.hora }}</strong> - {{ evento.titulo }}</li>
+                    {% else %}
+                    <li>Sem compromissos para hoje.</li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+
+            <!-- Progresso visual -->
+            <section class="progresso-box">
+                <h3>📈 Progresso</h3>
+                <p>Hábitos concluídos: <strong>{{ progresso.habitos }}%</strong></p>
+                <p>Tarefas concluídas: <strong>{{ progresso.tarefas }}%</strong></p>
+                <div class="barra-progresso">
+                    <div style="width: {{ progresso.total }}%" class="barra-preenchida"></div>
+                </div>
+            </section>
+
+
+
+
+        </main>
+
+        <section class="anotacoes-box" style="margin-top: 24px;">
+            <h3>📝 Anotações Rápidas</h3>
+            <form id="formAnotacao">
+                <textarea id="anotacaoTexto" placeholder="Escreva uma anotação..." rows="6"></textarea>
+                <button type="submit">Salvar</button>
+            </form>
+            <ul id="listaAnotacoes"></ul>
+        </section>
+
+    </div>
+
+    <script>
+        let timer;
+        let tempoRestante = 1500; // 25 minutos padrão
+        let emExecucao = false;
+
+        function atualizarDisplay() {
+            const minutos = Math.floor(tempoRestante / 60).toString().padStart(2, '0');
+            const segundos = (tempoRestante % 60).toString().padStart(2, '0');
+            document.getElementById("timer-display").textContent = `${minutos}:${segundos}`;
+        }
+
+        function startTimer() {
+            const inputMin = document.getElementById("tempoMinutos").value;
+            if (inputMin && !emExecucao) {
+                tempoRestante = parseInt(inputMin) * 60;
+                atualizarDisplay();
+            }
+            if (!emExecucao) {
+                emExecucao = true;
+                timer = setInterval(() => {
+                    if (tempoRestante > 0) {
+                        tempoRestante--;
+                        atualizarDisplay();
+                    } else {
+                        clearInterval(timer);
+                        emExecucao = false;
+                        alert("⏰ Tempo encerrado!");
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timer);
+            emExecucao = false;
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            tempoRestante = 1500;
+            emExecucao = false;
+            atualizarDisplay();
+        }
+
+        document.addEventListener("DOMContentLoaded", atualizarDisplay);
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("formAnotacao");
+            const input = document.getElementById("anotacaoTexto");
+            const lista = document.getElementById("listaAnotacoes");
+
+            let anotacoes = JSON.parse(localStorage.getItem("modoFocoAnotacoes") || "[]");
+
+            function renderizarAnotacoes() {
+                lista.innerHTML = "";
+                anotacoes.forEach((texto, index) => {
+                    const li = document.createElement("li");
+                    li.textContent = texto;
+                    li.onclick = () => {
+                        if (confirm("Excluir esta anotação?")) {
+                            anotacoes.splice(index, 1);
+                            salvar();
+                        }
+                    };
+                    lista.appendChild(li);
+                });
+            }
+
+            function salvar() {
+                localStorage.setItem("modoFocoAnotacoes", JSON.stringify(anotacoes));
+                renderizarAnotacoes();
+                input.value = "";
+            }
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (input.value.trim()) {
+                    anotacoes.push(input.value.trim());
+                    salvar();
+                }
+            });
+
+            renderizarAnotacoes();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/css/login.css">
+</head>
+
+<body>
+  <div class="login-container">
+    <h2>Entrar</h2>
+    {% if erro %}<p class="erro">{{ erro }}</p>{% endif %}
+    <form method="POST">
+      <input type="text" name="usuario" placeholder="Usuário" required>
+      <input type="password" name="senha" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+    </form>
+    <p class="link">Não tem conta? <a href="/registro">Crie aqui</a></p>
+  </div>
+  <script>
+    const loginForm = document.querySelector("form");
+
+    loginForm.addEventListener("submit", function (e) {
+      const usuario = document.querySelector('input[name="usuario"]').value;
+      // Simula salvar no localStorage (ideal seria após resposta do servidor)
+      localStorage.setItem("usuario", JSON.stringify({ nome: usuario }));
+    });
+  </script>
+  
+
+</body>
+
+</html>
