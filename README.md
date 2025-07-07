@@ -96,39 +96,7 @@ planner-a1/
 
 ---
 
-## 🧪 Como Rodar Localmente
 
-```bash
-# Clone o repositório
-$ git clone https://github.com/seuusuario/planner-a1.git
-$ cd planner-a1
-
-# Crie o banco de dados
-$ python
->>> from database import init_db
->>> init_db()
->>> exit()
-
-# Execute o servidor Flask
-$ python app.py
-
-# Acesse em:
-http://localhost:5000
-```
-
----
-
-## 📷 Screenshots (exemplo)
-
-* Dashboard com gráficos
-* Calendário responsivo
-* Tela de hábitos com porcentagem e dias
-* Anotações offline funcionando
-* Modo foco escuro com Pomodoro
-
-(*Adicione imagens em `/static/img` e referencie aqui*)
-
----
 
 ## 📌 Status
 
