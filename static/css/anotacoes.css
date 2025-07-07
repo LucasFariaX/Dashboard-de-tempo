@@ -1,0 +1,263 @@
+/* 🎨 CSS Completo - Página de Anotações com Topbar Moderna */
+
+:root {
+  --primary: #2c3e50;
+  --primary-light: #34495e;
+  --secondary: #2980b9;
+  --accent: #27ae60;
+  --danger: #c0392b;
+  --danger-light: #e74c3c;
+  --background: #ecf0f1;
+  --surface: #ffffff;
+  --text: #333;
+  --text-light: #777;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 32px;
+  --radius: 8px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.container.column-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 🧭 Topbar */
+.topbar {
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.topbar h2 {
+  font-size: 20px;
+  margin: 0;
+  margin: 0;
+  font-size: 20px;
+}
+
+.topbar nav ul {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-sm);
+  margin: 0;
+  padding: 0;
+}
+
+.topbar nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius);
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.topbar nav ul li a:hover,
+.topbar nav ul li a.active {
+  background-color: var(--primary-light);
+}
+
+/* Conteúdo principal */
+.main-content {
+  padding: var(--spacing-xl);
+  flex-grow: 1;
+  padding: var(--spacing-lg);
+  background-color: var(--background);
+  overflow-y: auto;
+}
+
+.anotacoes h1 {
+  font-size: 26px;
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+}
+
+/* 📝 Formulário de nova nota */
+.nota-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  max-width: 600px;
+  margin: 0 auto var(--spacing-xl);
+}
+
+.nota-form textarea {
+  width: 100%;
+  height: 120px;
+  padding: var(--spacing-sm);
+  font-size: 16px;
+  border: 1px solid var(--primary-light);
+  border-radius: var(--radius);
+  resize: vertical;
+  transition: box-shadow 0.3s ease;
+}
+
+.nota-form textarea:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 4px rgba(41, 128, 185, 0.4);
+  outline: none;
+}
+
+.nota-form button {
+  background-color: var(--secondary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nota-form button:hover {
+  background-color: var(--primary-light);
+}
+
+/* 📋 Lista de anotações */
+.nota-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+  padding: 0;
+  list-style: none;
+}
+
+/* Card de nota */
+.card {
+  background-color: var(--surface);
+  padding: var(--spacing-md);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  
+}
+
+.card textarea {
+  width: 98%;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius);
+  font-size: 15px;
+  border: 1px solid var(--primary-light);
+  resize: vertical;
+  margin-bottom: var(--spacing-xs);
+}
+
+.card small {
+  display: block;
+  color: var(--text-light);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Botões dentro do card */
+.edit-form button,
+.delete-button {
+  font-size: 14px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.edit-form button {
+  background-color: var(--accent);
+  color: white;
+}
+
+.edit-form button:hover {
+  background-color: #1e8449;
+}
+
+.delete-button {
+  background-color: var(--danger);
+  color: white;
+  margin-left: 8px;
+}
+
+.delete-button:hover {
+  background-color: var(--danger-light);
+}
+
+/* 🔁 Botão de sincronização */
+.sync-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.sync-button:hover {
+  background-color: var(--primary-light);
+}
+
+/* 📱 Responsivo */
+@media (max-width: 768px) {
+ 
+  .nota-form, .card {
+    width: 95%;
+  }
+
+  .anotacoes h1 {
+    font-size: 22px;
+  }
+}
+
+
+html, body {
+  overflow-y: scroll;         /* mantém rolagem funcional */
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari */
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .topbar nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: flex-start;
+    padding-left: 0;
+  }
+
+  .topbar nav ul li {
+    display: flex;
+    align-items: center;
+  }
+
+  .topbar nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+

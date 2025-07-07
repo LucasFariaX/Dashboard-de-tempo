@@ -1,0 +1,356 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+:root {
+  --primary: #2c3e50;
+  --primary-light: #34495e;
+  --secondary: #2980b9;
+  --accent: #27ae60;
+  --background: #ecf0f1;
+  --surface: #ffffff;
+  --text: #333;
+  --text-light: #777;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 14px;
+  --spacing-xl: 32px;
+  --radius: 8px;
+}
+
+/* Sidebar 
+.sidebar {
+  width: 240px;
+  background-color: var(--primary);
+  color: white;
+  padding: var(--spacing-lg);
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: var(--spacing-sm) 0;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius);
+  transition: background 0.3s;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background-color: var(--primary-light);
+}
+*/
+
+/* 📐 Layout com barra no topo */
+.container.column-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.topbar h2 {
+  font-size: 20px;
+  margin: 0;
+  margin: 0;
+  font-size: 20px;
+}
+
+.topbar nav ul {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-sm);
+  margin: 0;
+  padding: 0;
+}
+
+.topbar nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius);
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.topbar nav ul li a:hover,
+.topbar nav ul li a.active {
+  background-color: var(--primary-light);
+}
+
+
+/* Conteúdo principal */
+.main-content {
+  padding: var(--spacing-xl);
+  flex: 1;
+  padding: 40px;
+  background-color: var(--background);
+  overflow-x: auto;
+}
+
+.habitos h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.habit-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.habit-form input[type="text"],
+.habit-form input[type="number"],
+.habit-form input[type="date"] {
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.habit-form button {
+  padding: 10px 20px;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.habit-form button:hover {
+  background-color: #1e8449;
+}
+
+/* Tabela de hábitos */
+.tabela-habitos {
+  overflow-x: auto;
+}
+
+.tabela-habitos table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.tabela-habitos th,
+.tabela-habitos td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.tabela-habitos th {
+  background-color: #ddd;
+  font-weight: 500;
+}
+
+/* Checkbox de feito */
+.tabela-habitos input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* Botão de deletar */
+button[type="submit"] {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+button[type="submit"]:hover {
+  color: #c0392b;
+}
+
+/* Botão Recorrência */
+.tabela-habitos td button.recorrencia-toggle {
+  margin: 2px 4px;
+  padding: 6px 10px;
+  background-color: var(--secondary);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.tabela-habitos td button.recorrencia-toggle:hover {
+  background-color: #1f6391;
+}
+
+/* Bloco colapsável de recorrência */
+.recorrencia-bloco {
+  display: none;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.recorrencia-bloco.active {
+  display: table-row;
+}
+
+.recorrencia-bloco button {
+  margin: 5px;
+  padding: 6px 10px;
+  background-color: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.recorrencia-bloco button:hover {
+  background-color: #1d6fa5;
+}
+
+.recorrencia-bloco button.recorrente {
+  background-color: var(--accent);
+  font-weight: bold;
+}
+
+/* Responsivo para celular */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+  }
+
+
+  .main-content {
+  padding: var(--spacing-xl);
+    padding: 20px;
+    width: 100%;
+  }
+
+  .habit-form {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .habit-form input,
+  .habit-form button {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  .tabela-habitos {
+    overflow-x: auto;
+  }
+
+  .tabela-habitos table {
+    width: 100%;
+    font-size: 14px;
+    border-collapse: collapse;
+  }
+
+  .tabela-habitos th,
+  .tabela-habitos td {
+    font-size: 13px;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .habitos h1 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+}
+
+
+html, body {
+  overflow-y: scroll;         /* mantém rolagem funcional */
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari */
+}
+
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .topbar nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: flex-start;
+    padding-left: 0;
+  }
+
+  .topbar nav ul li {
+    display: flex;
+    align-items: center;
+  }
+
+  .topbar nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+

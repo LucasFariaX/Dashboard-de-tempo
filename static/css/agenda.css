@@ -1,0 +1,330 @@
+:root {
+  --primary: #2c3e50;
+  --primary-light: #34495e;
+  --secondary: #2980b9;
+  --accent: #27ae60;
+  --background: #ecf0f1;
+  --surface: #ffffff;
+  --text: #333;
+  --text-light: #777;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+}
+
+/* Sidebar Padrão 
+.sidebar {
+  width: 240px;
+  background-color: var(--primary);
+  color: white;
+  padding: var(--spacing-lg);
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: var(--spacing-sm) 0;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius);
+  transition: background 0.3s;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background-color: var(--primary-light);
+}
+
+*/
+
+/* 📐 Layout com barra no topo */
+.container.column-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.topbar h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.topbar nav ul {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-sm);
+  margin: 0;
+  padding: 0;
+}
+
+.topbar nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius);
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.topbar nav ul li a:hover,
+.topbar nav ul li a.active {
+  background-color: var(--primary-light);
+}
+
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  background-color: #ecf0f1;
+  overflow-y: auto;
+}
+
+.agenda h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+#calendar {
+  width: 100% !important;
+  max-width: 100%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.fc-toolbar-title {
+  font-size: 20px;
+}
+
+.agenda-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.agenda-form input[type="text"],
+.agenda-form input[type="date"],
+.agenda-form input[type="time"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.agenda-form button {
+  padding: 10px 20px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.agenda-form button:hover {
+  background-color: #1e8449;
+}
+
+.agenda-lista {
+  list-style: none;
+  padding-left: 0;
+}
+
+.agenda-lista li {
+  background-color: white;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #555;
+}
+
+.agenda-resumo {
+  margin-top: 40px;
+}
+
+.agenda-resumo h2 {
+  font-size: 20px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.eventos-dia {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 30px;
+}
+
+.eventos-dia li {
+  background-color: white;
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 15px;
+  color: #444;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+  }
+
+  .main-content {
+    padding: 20px;
+    width: 100%;
+  }
+
+  .agenda-form {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .agenda-form input,
+  .agenda-form button {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  .agenda-lista li {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .agenda h1 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  #calendar {
+    padding: 10px;
+    font-size: 10px;
+    width: 95% !important;
+    box-sizing: border-box;
+  }
+
+  .fc {
+    width: 100%;
+  }
+
+  .fc .fc-toolbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .fc .fc-button {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .fc .fc-col-header-cell-cushion,
+  .fc .fc-daygrid-day-number {
+    font-size: 13px;
+  }
+
+  .fc .fc-scrollgrid-section-body {
+    overflow-x: auto;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .topbar nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: flex-start;
+    padding-left: 0;
+  }
+
+  .topbar nav ul li {
+    display: flex;
+    align-items: center;
+  }
+
+  .topbar nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+
+
+
+html, body {
+  overflow-y: scroll;         /* mantém rolagem funcional */
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari */
+}
