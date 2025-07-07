@@ -25,20 +25,22 @@ O *Planner A1* é um sistema pessoal de planejamento, desenvolvido com *Flask + 
 
 📂 Estrutura do Projeto
 
-planner-a1/
+**Planner-a1/**
 
-├── app.py                  # Arquivo principal Flask
-├── database.py             # Conexão com SQLite
-├── routes/                 # Blueprints (agenda, habitos, dashboard, etc)
-├── static/
-    ├── css/                # Estilos por página
-    └── js/                 # IndexedDB, Pomodoro
-├── templates/              # HTMLs (Jinja2)
-├── rotina.db               # Banco de dados SQLite
+app.py      # Arquivo principal Flask
+data.py     # Conexão com SQL
+routes      # Blueprints (agenda, habitos, dashboard, etc)
+static
+ |-  CSS     # Estilos por página
+ |-  JS      # IndexedDB, Pomodoro
+Templates   # HTMLs (Jinja2)
+rotina.db   # Banco de dados SQLite
 
 
 
-Funcionalidades
+
+
+**Funcionalidades**
 
 ✅ Hábitos Inteligentes
 
@@ -47,6 +49,8 @@ Funcionalidades
 * Controle de checkboxes por dia da semana
 * Cálculo de porcentagem de conclusão com meta definida
 * Interface responsiva com botão colapsável para editar recorrência
+
+
 
 🗓️ Agenda com Integração
 
@@ -69,7 +73,7 @@ Funcionalidades
 * Suporte a funcionamento **offline via IndexedDB**
 * Sincroniza com backend ao reconectar
 
-### 📊 Dashboard Visual
+📊 Dashboard Visual
 
 * Cards informativos (pendências, próximo evento, última nota)
 * Gráfico de progresso semanal (Chart.js)
